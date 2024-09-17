@@ -1,0 +1,26 @@
+I'm a horrible artist so just about every asset was obtained for free from various sources/artists.
+
+Image Credits:
+
+UI Pack courtesy of Skolaztika at https://skolaztika.itch.io/
+
+Town Map Background is courtesy of AI (Told ya, I'm a horrible artist)
+
+Castle Background courtesy of Two Orcs Studio at https://two-orcs.itch.io/
+
+All Other Backgrounds courtesy of Lornn at https://lornn.itch.io/
+
+JS Actor - Lifa courtesy of JosephSeraph at https://opengameart.org/users/josephseraph via CC-BY-3.0 https://creativecommons.org/licenses/by/3.0/
+
+Goblin Sprite is once again AI generated
+
+All Other Character Sprites TRPG Legacy courtesy of Ddant1100 at https://ddant1100.itch.io/ 
+
+
+Code Influences:
+
+Combat System heavily modified version of Alex's system found here https://lemmasoft.renai.us/forums/viewtopic.php?f=51&t=18047&start=15#p395926
+
+Map Travel System basically copied entirely from Harmelody's great Youtube tutorial found here https://www.youtube.com/watch?v=RgFRvDNiZro
+
+Special thanks to all the YouTube creators, members of the Lemma Soft forums, and the Discord server.
