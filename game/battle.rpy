@@ -12,41 +12,50 @@ label battle_loop:
                     damage_roll = 0
                     if attack_roll == 1:
                         damage = 0
-                    elif attack_roll == 20 or attack_roll + mc.attack_bonus + mc.proficiency_bonus > enemy1.ac:
+                    elif attack_roll == 20 or attack_roll + mc.attack_bonus + mc.proficiency_bonus >= enemy1.ac:
                         damage_roll = dice_roller(1, 8)
                         damage = (damage_roll + mc.attack_bonus)
                         enemy1.attributes['hp'] -= damage
                     else:
                         damage = 0
                 mc.c "En garde you filthy swine!"
-                if damage > 0:
-                    "[player_name] rolled [attack_roll] + [mc.attack_bonus] + [mc.proficiency_bonus] to hit.\n[enemy1.name] took [damage_roll] + [mc.attack_bonus] damage."
-                elif attack_roll == 1:
-                    "[player_name] rolled [attack_roll] and critically missed their target."
-                else:
-                    "[player_name] rolled [attack_roll] + [mc.attack_bonus] + [mc.proficiency_bonus] and missed their target."
+            "Defend":
+                mc.c "I feel it best to defend."
 
 
         if enemy1.attributes['hp'] > 0:
             python:
-                damage_roll = 0
-                attack_roll = dice_roller(1, 20)
-                if attack_roll == 1:
-                    damage = 0
-                elif attack_roll == 20 or attack_roll + enemy1.attack_bonus + enemy1.proficiency_bonus > mc.ac:
-                    damage_roll = dice_roller(1, 6)
-                    damage = (damage_roll + enemy1.attack_bonus)
-                    mc.attributes['hp'] -= damage
+                damage = 0
+                if len(enemy1.attributes['attack']) > 4:
+                    attack_roll = dice_roller(1, 20)
+                    if attack_roll == 1 or attack_roll + enemy1.attack_bonus + enemy1.proficiency_bonus < mc.ac:
+                        damage += 0
+                    else:
+                        damage_roll1 = dice_roller(*enemy1.attributes['attack'][0])
+                        damage_roll2 = dice_roller(*enemy1.attributes['attack'][4])
+                        damage += (damage_roll1 + damage_roll2 + enemy1.attack_bonus)
+                elif len(enemy1.attributes['attack']) == 4:
+                    attack_roll1 = dice_roller(1, 20)
+                    if attack_roll1 == 1 or attack_roll1 + enemy1.attack_bonus + enemy1.proficiency_bonus < mc.ac:
+                        damage += 0
+                    else:
+                        damage_roll1 = dice_roller(*enemy1.attributes['attack'][0])
+                        damage += (damage_roll1 + enemy1.attack_bonus)
+                    attack_roll2 = dice_roller(1, 20)
+                    if attack_roll2 == 1 or attack_roll2 + enemy1.attack_bonus + enemy1.proficiency_bonus < mc.ac:
+                        damage += 0
+                    else:
+                        damage_roll2 = dice_roller(*enemy1.attributes['attack'][2])
+                        damage += (damage_roll2 + enemy1.attack_bonus)
                 else:
-                    damage = 0
+                    attack_roll = dice_roller(1, 20)
+                    if attack_roll == 1 or attack_roll + enemy1.attack_bonus + enemy1.proficiency_bonus < mc.ac:
+                        damage += 0
+                    else:
+                        damage_roll = dice_roller(*enemy1.attributes['attack'][0])
+                        damage += (damage_roll + enemy1.attack_bonus)
+                mc.attributes['hp'] -= damage
             enemy1.c "Me kill tall fleshy thing yes!"
-            if damage > 0:
-                "[enemy1.name] rolled [attack_roll] + [enemy1.attack_bonus] + [enemy1.proficiency_bonus] to hit.\n[player_name] took [damage_roll] + [enemy1.attack_bonus] damage."
-            elif attack_roll == 1:
-                "[enemy1.name] rolled [attack_roll] and critically missed their target."
-            else:
-                "[enemy1.name] rolled [attack_roll] + [enemy1.attack_bonus] + [enemy1.proficiency_bonus] and missed their target."
-                
 
     hide screen battle_stats_screen
 
