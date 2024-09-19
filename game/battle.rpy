@@ -2,7 +2,6 @@
 
 # The main combat loop
 label battle_loop:
-    hide fairy
     show screen battle_stats_screen
 
     while (enemy1.hp > 0) and (mc.hp > 0):

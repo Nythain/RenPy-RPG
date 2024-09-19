@@ -9,42 +9,6 @@ image playerPortrait = DynamicImage("character[player_character]")
 default player_name = ""
 
 # Some Python to create the player and enemy classes
-init python:
-    class Creature:
-        def __init__(self, character, name):
-            self.c = character
-            self.name = name
-            self.attack_bonus = 0
-            self.damage_bonus = 0
-            self.ac = 10
-            self.max_hp = 10
-
-    class Player(Creature):
-        def __init__(self, character, name, prof):
-            super().__init__(character, name)
-            if prof == "Warrior":
-                self.max_hp += 3
-                self.hp = self.max_hp
-                self.attack_bonus += 5
-                self.damage_bonus += 3
-                self.ac += 6
-
-    class Monster(Creature):
-        def __init__(self, character, name, race):
-            super().__init__(character, name)
-            self.race = race
-            if self.race == "Goblin":
-                self.max_hp -= 3
-                self.hp = self.max_hp
-                self.attack_bonus += 4
-                self.damage_bonus += 2
-                self.ac += 5
-
-    def dice_roller(times, sides):
-        total = 0
-        for time in range(1, times + 1):
-            total += renpy.random.randint(1, sides)
-        return total
 
 
 # The game starts here.
@@ -87,6 +51,8 @@ label start:
     show goblin at right with moveinright
 
     fa.c "Ready yourself [player_name]."
+
+    hide fairy
 
     # Starting the combat loop until someone dies
     call battle_loop
