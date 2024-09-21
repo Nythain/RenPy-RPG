@@ -16,7 +16,7 @@ default player_name = ""
 label start:
     play music gamemusic
 
-#    call screen town_map_screen
+    call screen inventory_screen
 
     # Creating some NPCs
     $ na = Character("Narrator")

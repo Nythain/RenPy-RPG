@@ -39,8 +39,8 @@ screen town_map_screen:
 # Back Button
 screen back_button:
     imagebutton:
-        xpos 1788
-        ypos 50
+        xpos 100
+        ypos 100
         idle "back_idle.png"
         hover "back_hover"
         action Jump("town_map")
