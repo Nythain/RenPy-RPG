@@ -8,8 +8,8 @@ default player_character = 0
 image playerPortrait = DynamicImage("character[player_character]")
 default player_name = ""
 
-# Some Python to create the player and enemy classes
-
+# Inventory stuff
+default selected_item = None
 
 # The game starts here.
 
@@ -41,7 +41,15 @@ label start:
     $ player_name = renpy.input("Do you dare give a magical stranger your real name, or just an alias?")
 
     # Creating the main character class object
-    $ mc = Player(Character([player_name]), [player_name], "Warrior")
+    python:
+        mc = Player(Character([player_name]), [player_name], "Warrior")
+        starting_mainhand = Equipment("a", starting_gear[mc.profession][0])
+        starting_mainhand.equip(mc, "mainhand")
+        starting_offhand = Equipment("a", starting_gear[mc.profession][1])
+        starting_offhand.equip(mc, "offhand")
+        starting_armor = Equipment("a", starting_gear[mc.profession][2])
+        starting_armor.equip(mc, "armor")
+        mc.ac = mc.get_ac()
 
     # Whipping up a quick enemy class object to test combat
     $ enemy1 = Monster(Character("Bob"), "Bob", "Goblin")

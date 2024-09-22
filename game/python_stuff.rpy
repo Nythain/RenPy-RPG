@@ -56,14 +56,28 @@ init python:
     class Player(Creature):
         def __init__(self, character, name, prof):
             super().__init__(character, name, prof)
+            self.profession = prof
             self.level = 1
             self.xp = 0
             self.proficiency_bonus = 2
-            self.ac = 18
+            self.ac = 10 + modifiers[self.attributes['dex']]
             self.gold = 0
             self.mainhand = None
             self.offhand = None
             self.armor = None
+            self.inventory = []
+
+        def get_ac(self):
+            if self.armor != None:
+                self.ac = self.armor['armor_class']
+            if self.offhand['name'] == 'Shield':
+                self.ac += 2
+            return self.ac
+
+        def add_hp(self, amount):
+            self.attributes['hp'] += amount
+            if self.attributes['hp'] > max_hp:
+                self.attributes['hp'] = max_hp
 
         def add_xp(self, amount):
             self.xp += amount
@@ -71,26 +85,80 @@ init python:
         def level_up(self):
             pass
 
+        def equip_item(self, item_name, pos):
+            if any(d['name'] == item_name for d in items):
+                for item in items:
+                    try:
+                        if item['name'] == item_name and item['hands']:
+                            if pos == "mainhand":
+                                if self.offhand == None:
+                                    self.mainhand = item
+                                elif self.offhand['hands'] != 2 and item['hands'] != 2:
+                                    self.mainhand = item
+                            elif pos == "offhand":
+                                if self.mainhand == None:
+                                    self.offhand = item
+                                elif self.mainhand['hands'] != 2 and item['hands'] != 2:
+                                    self.offhand = item
+                    except:
+                        self.armor = item
+
+        def unequip_item(self,item_name):
+            if self.mainhand['name'] == item_name:
+                self.mainhand = None
+            elif self.offhand['name'] == item_name:
+                self.offhand = None
+            elif self.armor['name'] == item_name:
+                self.armor = None
+
     class Monster(Creature):
         def __init__(self, character, name, prof):
             super().__init__(character, name, prof)
             self.ac = self.attributes['ac']
             self.proficiency_bonus = monster_proficiency_bonus[self.attributes['cr']]
 
-    class Inventory:
-        pass
+    class InventoryItem:
+        def __init__(self, img, name):
+            self.img = img
+            self.name = name
+            for item in items:
+                if item['name'] == self.name:
+                    self.value = item['cost']
 
-    class Equipable:
-        pass
+    class Equipable(InventoryItem):
+        def __init__(self, img, name):
+            super().__init__(img, name)
+            self.is_equpped = False
+            self.equipped_to = None
 
-    class Weapon(Equipable):
-        pass
+        def equip(self, target):
+            self.is_equpped = True
+            self.equipped_to = target
+
+        def unequip(self):
+            self.is_equpped = False
+            self.equipped_to = None
+
+    class Equipment(Equipable):
+        def __init__(self, img, name):
+            super().__init__(img, name)
+
+        def equip(self, target, pos):
+            Equipable.equip(self, target)
+            target.equip_item(self.name, pos)
+
+        def unequip(self):
+            self.equipped_to.unequip_item(self.name)
+            Equipable.unequip(self)
     
-    class Armor(Equipable):
-        pass
+    class Consumable(InventoryItem):
+        def __init__(self, img, name, hp_gain):
+            super().__init__(img, name)
+            self.hp_gain = hp_gain
 
-    class Consumable:
-        pass
+            def use(self, target):
+                inventory.remove(self)
+                target.add_hp(self.hp_gain)
 
     class NonConsumable:
         pass

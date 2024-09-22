@@ -3,7 +3,7 @@
 # The main combat loop
 label battle_loop:
     show screen battle_stats_screen
-
+    $ mc.ac = mc.get_ac()
     while (enemy1.attributes['hp'] > 0) and (mc.attributes['hp'] > 0):
         menu:
             "Attack!":
@@ -13,7 +13,7 @@ label battle_loop:
                     if attack_roll == 1:
                         damage = 0
                     elif attack_roll == 20 or attack_roll + mc.attack_bonus + mc.proficiency_bonus >= enemy1.ac:
-                        damage_roll = dice_roller(1, 8)
+                        damage_roll = dice_roller(*mc.mainhand['damage'])
                         damage = (damage_roll + mc.attack_bonus)
                         enemy1.attributes['hp'] -= damage
                     else:
