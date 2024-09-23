@@ -3,7 +3,7 @@
 # The main combat loop
 label battle_loop:
     show screen battle_stats_screen
-    $ mc.ac = mc.get_ac()
+    $ mc.get_ac()
     while (enemy1.attributes['hp'] > 0) and (mc.attributes['hp'] > 0):
         menu:
             "Attack!":

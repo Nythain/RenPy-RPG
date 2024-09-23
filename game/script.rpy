@@ -4,8 +4,10 @@
 define audio.gamemusic = "audio/teller-of-the-tales-by-kevin-macleod-from-filmmusic-io.mp3"
 
 # Declare some character select stuff
-default player_character = 0
-image playerPortrait = DynamicImage("character[player_character]")
+default player_gender = 0
+default player_class = ""
+image genderPortrait = DynamicImage("character[player_gender]")
+image playerPortrait = DynamicImage("[player_class][player_gender].png")
 default player_name = ""
 
 # Inventory stuff
@@ -16,8 +18,6 @@ default selected_item = None
 label start:
     play music gamemusic
 
-    call screen inventory_screen
-
     # Creating some NPCs
     $ na = Character("Narrator")
     $ fa = Character("Mysterious Creature")
@@ -27,14 +27,24 @@ label start:
     show fairy at truecenter
 
     fa "Why hello there. I've never seen anyone like you before."
-    fa "Are you a man or a woman?"
+    fa "Are you a boy or a girl?"
 
     # Choosing our character. Male or Female warrior for now
-    call screen choose_character
+    call screen choose_gender
 
-    show playerPortrait at left
+    show genderPortrait at left
 
     fa "Well that's most definitely interesting!"
+    fa "And what of your journeys? How would you describe yourself?"
+
+    hide genderPortrait
+    hide fairy
+
+    call screen choose_class
+
+    show playerPortrait at left
+    show fairy at truecenter
+
     fa "Oh, how rude of me. I don't even know your name yet."
 
     # Trying to get a player input name
@@ -42,14 +52,15 @@ label start:
 
     # Creating the main character class object
     python:
-        mc = Player(Character([player_name]), [player_name], "Warrior")
-        starting_mainhand = Equipment("a", starting_gear[mc.profession][0])
+        mc = Player(Character(player_name), player_name, player_class)
+        starting_mainhand = Equipment(starting_gear[mc.profession][0], starting_gear[mc.profession][0])
         starting_mainhand.equip(mc, "mainhand")
-        starting_offhand = Equipment("a", starting_gear[mc.profession][1])
+        starting_offhand = Equipment(starting_gear[mc.profession][1], starting_gear[mc.profession][1])
         starting_offhand.equip(mc, "offhand")
-        starting_armor = Equipment("a", starting_gear[mc.profession][2])
+        starting_armor = Equipment(starting_gear[mc.profession][2], starting_gear[mc.profession][2])
         starting_armor.equip(mc, "armor")
-        mc.ac = mc.get_ac()
+        mc.get_ac()
+        mc.inventory.extend([starting_mainhand, starting_offhand, starting_armor])
 
     # Whipping up a quick enemy class object to test combat
     $ enemy1 = Monster(Character("Bob"), "Bob", "Goblin")

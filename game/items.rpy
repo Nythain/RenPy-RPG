@@ -54,5 +54,7 @@ init python:
         {"name":"Plate", "cost":1500, "armor_class":18, "weight":65},
         {"name":"Shield", "hands":1, "cost":10, "armor_class":2, "weight":6},
         # Arcane Focus
-        {"name":"Arcane Focus", "type":"arcane", "hands": 1, "cost":1, "damage": "None", "weight":0.25}
+        {"name":"Arcane Focus", "type":"arcane", "hands": 1, "cost":1, "damage": "None", "weight":0.25},
+        # Consumables
+        {"name":"Potion", "cost":50, "weight":0.5}
     ]

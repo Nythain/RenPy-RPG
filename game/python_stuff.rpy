@@ -59,8 +59,8 @@ init python:
             self.profession = prof
             self.level = 1
             self.xp = 0
+            self.next_level = level_progression[self.level + 1]
             self.proficiency_bonus = 2
-            self.ac = 10 + modifiers[self.attributes['dex']]
             self.gold = 0
             self.mainhand = None
             self.offhand = None
@@ -70,14 +70,17 @@ init python:
         def get_ac(self):
             if self.armor != None:
                 self.ac = self.armor['armor_class']
-            if self.offhand['name'] == 'Shield':
-                self.ac += 2
+            else:
+                self.ac = 10 + modifiers[self.attributes['dex']]
+            if self.offhand != None:
+                if self.offhand['name'] == "Shield":
+                    self.ac += 2
             return self.ac
 
         def add_hp(self, amount):
             self.attributes['hp'] += amount
-            if self.attributes['hp'] > max_hp:
-                self.attributes['hp'] = max_hp
+            if self.attributes['hp'] > self.max_hp:
+                self.attributes['hp'] = self.max_hp
 
         def add_xp(self, amount):
             self.xp += amount
@@ -106,7 +109,7 @@ init python:
         def unequip_item(self,item_name):
             if self.mainhand['name'] == item_name:
                 self.mainhand = None
-            elif self.offhand['name'] == item_name:
+            elif self.offhand != None and self.offhand['name'] == item_name:
                 self.offhand = None
             elif self.armor['name'] == item_name:
                 self.armor = None
@@ -156,12 +159,17 @@ init python:
             super().__init__(img, name)
             self.hp_gain = hp_gain
 
-            def use(self, target):
-                inventory.remove(self)
-                target.add_hp(self.hp_gain)
+        def use(self, target):
+            target.inventory.remove(self)
+            target.add_hp(self.hp_gain)
+            global selected_item
+            selected_item = None
 
     class NonConsumable:
-        pass
+        def __init__(self, img, name):
+            super().__init__(img, name)
 
-    class KeyItem:
-        pass
+    class KeyItem(InventoryItem):
+        def __init__(self, img, name):
+            super().__init__(img, name)
+            self.value = 0
